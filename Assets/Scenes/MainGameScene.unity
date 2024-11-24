@@ -335,7 +335,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _transformToFollow: {fileID: 1006325151}
-  _offset: {x: 0, y: 5, z: -10}
 --- !u!4 &523269485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6763854909698726252, guid: 95c0912f548d0604cb561469a9816558, type: 3}
@@ -437,7 +436,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4e69deff37afee64394ba55a6cbfa2df, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
