@@ -17,5 +17,5 @@ public class PlatformMovement : MonoBehaviour
 
     private float _movementSpeed = 1.5f;
     private float _moveDistance = 8f;
-    private float _initialXPosition;
+    private float _initialXPosition; //comment de test
 }
