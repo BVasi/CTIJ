@@ -690,52 +690,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3299476662013392539, guid: ff7e2d31d16ca93499ae51147e05d6bd, type: 3}
   m_PrefabInstance: {fileID: 912278910}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1366759352
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1366759354}
-  - component: {fileID: 1366759353}
-  m_Layer: 0
-  m_Name: HealthManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1366759353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366759352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf0cd55d97f0e9342b6b5d7bc414c429, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HealthBar: {fileID: 1200615714}
-  healthAmount: 100
---- !u!4 &1366759354
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366759352}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1506073, y: -1.1752844, z: -0.012737062}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1468781254 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3299476662013392539, guid: ff7e2d31d16ca93499ae51147e05d6bd, type: 3}
@@ -1234,6 +1188,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Thief
       objectReference: {fileID: 0}
+    - target: {fileID: 2850280769078414973, guid: 4656c449245c2e948a7490001abf8f82, type: 3}
+      propertyPath: _healthBar
+      value: 
+      objectReference: {fileID: 1200615714}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4656c449245c2e948a7490001abf8f82, type: 3}
 --- !u!1001 &3299476661046392526
