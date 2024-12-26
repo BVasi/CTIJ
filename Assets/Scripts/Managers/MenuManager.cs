@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        isMainGameLoadedForTheFirstTime = true;
+    }
+
     public void OnGameStateChanged(GameState state)
     {
         switch (state)
@@ -37,6 +43,18 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if ((scene.name.Equals(MAIN_GAME_SCENE_NAME)) && (WaveManager.Instance != null))
+        {
+            if (!isMainGameLoadedForTheFirstTime)
+            {
+                WaveManager.Instance.StartNextWave();
+            }
+            isMainGameLoadedForTheFirstTime = false;
+        }
+    }
+
     private void HandleMainMenuState()
     {
         SceneManager.LoadScene(MAIN_MENU_SCENE_NAME);
@@ -44,7 +62,7 @@ public class MenuManager : MonoBehaviour
 
     private void HandleShopMenuState()
     {
-        //to do: add shop logic
+        SceneManager.LoadScene(SHOP_SCENE_NAME);
     }
 
     private void HandleLoseState()
@@ -60,4 +78,7 @@ public class MenuManager : MonoBehaviour
     private const string MAIN_MENU_SCENE_NAME = "MainMenu";
     private const string MAIN_GAME_SCENE_NAME = "MainGameScene";
     private const string GAME_OVER_SCENE_NAME = "GameOver";
+    private const string SHOP_SCENE_NAME = "Shop";
+
+    private bool isMainGameLoadedForTheFirstTime; //to do: find better solution than using this variable
 }

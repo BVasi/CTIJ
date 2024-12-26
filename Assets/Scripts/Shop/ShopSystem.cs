@@ -8,21 +8,22 @@ public class ShopSystem : MonoBehaviour
     [System.Serializable]
     public class Item
     {
-        public Sprite image;      
-        public string title;       
-        public string description; 
-        public float price;        
+        public Sprite image;
+        public string title;
+        public string description;
+        public float price;
     }
 
-    public List<Item> items = new List<Item>(); 
-    public GameObject itemPrefab;             
-    public Transform itemContainer;           
-    public int itemsToDisplay = 3;                      
+    public List<Item> items = new List<Item>();
+    public GameObject itemPrefab;
+    public Transform itemContainer;
+    public int itemsToDisplay = 3;
     void Start()
     {
-        PopulateItemList(); 
+        PopulateItemList();
         GenerateShopItems();
         DisplayItems();
+        GameManager.Instance.UpdateGameState(GameState.MainGamePlay); //to do: make this after user presses action
     }
 
     void PopulateItemList()
@@ -45,7 +46,7 @@ public class ShopSystem : MonoBehaviour
 
         items.Add(new Item
         {
-            image = Resources.Load<Sprite>("speed"), 
+            image = Resources.Load<Sprite>("speed"),
             title = "Speed",
             description = "Grants you extra speed",
             price = 20f
@@ -75,7 +76,7 @@ public class ShopSystem : MonoBehaviour
             int randomIndex = Random.Range(0, items.Count);
             Item randomItem = items[randomIndex];
 
-            if (!randomItems.Contains(randomItem)) 
+            if (!randomItems.Contains(randomItem))
             {
                 randomItems.Add(randomItem);
             }
