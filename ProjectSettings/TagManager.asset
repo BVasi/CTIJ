@@ -56,3 +56,6 @@ TagManager:
   - name: Ground
     uniqueID: 1586742295
     locked: 0
+  - name: Coin
+    uniqueID: 3758357625
+    locked: 0

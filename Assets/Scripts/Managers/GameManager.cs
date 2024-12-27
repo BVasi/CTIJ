@@ -15,6 +15,16 @@ public class GameManager : MonoBehaviour
         _menuManager.OnGameStateChanged(newState);
     }
 
+    public void AddCoins(int amount)
+    {
+        _coinManager.AddCoins(amount);
+    }
+
+    public void SpendCoins(int amount)
+    {
+        _coinManager.SpendCoins(amount);
+    }
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -25,6 +35,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         _menuManager = GetComponent<MenuManager>();
+        _coinManager = GetComponent<CoinManager>();
     }
 
     void Start()
@@ -34,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
     private MenuManager _menuManager;
+    private CoinManager _coinManager;
     private GameState _state;
 }
 

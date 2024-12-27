@@ -17,32 +17,32 @@ public class WaveManager : MonoBehaviour
 
     void Start()
     {
-        currentWave_ = INITIALIZATION_VALUE;
-        enemiesPerWave_ = INITIALIZATION_VALUE;
-        isWaveActive_ = false;
-        isSpawningComplete_ = false;
-        timer_ = GetComponent<Timer>();
-        timer_.OnTimerEnd += HandleOnTimerEnd;
-        enemies_ = new List<GameObject>();
+        _currentWave = INITIALIZATION_VALUE;
+        _enemiesPerWave = INITIALIZATION_VALUE;
+        _isWaveActive = false;
+        _isSpawningComplete = false;
+        _timer = GetComponent<Timer>();
+        _timer.OnTimerEnd += HandleOnTimerEnd;
+        _enemies = new List<GameObject>();
         StartNextWave();
     }
 
     void Update()
     {
-        if (!isWaveActive_)
+        if (!_isWaveActive)
         {
             return;
         }
         if (IsWaveDead())
         {
-            timer_.StopTimer();
+            _timer.StopTimer();
             HandleWaveSuccess();
             GameManager.Instance.UpdateGameState(GameState.ShopMenu);
             return;
         }
-        if (timer_.HasExpired())
+        if (_timer.HasExpired())
         {
-            timer_.StopTimer();
+            _timer.StopTimer();
             HandleWaveFailure();
             GameManager.Instance.UpdateGameState(GameState.Lose);
         }
@@ -50,31 +50,31 @@ public class WaveManager : MonoBehaviour
 
     public void StartNextWave()
     {
-        currentWave_++;
-        enemiesPerWave_ += 5;
-        isSpawningComplete_ = false;
+        _currentWave++;
+        _enemiesPerWave += 5;
+        _isSpawningComplete = false;
         StartCoroutine(SpawnEnemiesOverTime());
-        timer_.StartTimerForSeconds(Random.Range(MIN_WAVE_TIME, MAX_WAVE_TIME));
-        isWaveActive_ = true;
+        _timer.StartTimerForSeconds(Random.Range(MIN_WAVE_TIME, MAX_WAVE_TIME));
+        _isWaveActive = true;
     }
 
-    private IEnumerator SpawnEnemiesOverTime()
+    private IEnumerator SpawnEnemiesOverTime() //to do: stop if game over
     {
-        for (int enemyIndex = FIRST_ENEMY_INDEX; enemyIndex < enemiesPerWave_; enemyIndex++)
+        for (int enemyIndex = FIRST_ENEMY_INDEX; enemyIndex < _enemiesPerWave; enemyIndex++)
         {
-            GameObject enemyToSpawn = enemyPrefabs_[Random.Range(FIRST_ENEMY_INDEX, enemyPrefabs_.Length)];
+            GameObject enemyToSpawn = _enemyPrefabs[Random.Range(FIRST_ENEMY_INDEX, _enemyPrefabs.Length)];
             GameObject spawnedEnemy = Instantiate(enemyToSpawn,
                 ENEMY_POSSIBLE_SPAWNS[Random.Range(FIRST_ENEMY_SPAWN_LOCATION_INDEX, ENEMY_POSSIBLE_SPAWNS.Length)],
                 Quaternion.identity);
-            enemies_.Add(spawnedEnemy);
+            _enemies.Add(spawnedEnemy);
             yield return new WaitForSeconds(Random.Range(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY));
         }
-        isSpawningComplete_ = true;
+        _isSpawningComplete = true;
     }
 
     private void HandleOnTimerEnd()
     {
-        timer_.StopTimer();
+        _timer.StopTimer();
         if (IsWaveDead())
         {
             HandleWaveSuccess();
@@ -85,16 +85,16 @@ public class WaveManager : MonoBehaviour
 
     private bool IsBossWave()
     {
-        return (currentWave_ % BOSS_WAVE_INTERVAL) == INITIALIZATION_VALUE;
+        return (_currentWave % BOSS_WAVE_INTERVAL) == INITIALIZATION_VALUE;
     }
 
     private bool IsWaveDead()
     {
-        if (!isSpawningComplete_)
+        if (!_isSpawningComplete)
         {
             return false;
         }
-        foreach (GameObject enemy in enemies_)
+        foreach (GameObject enemy in _enemies)
         {
             if (enemy != null)
             {
@@ -106,25 +106,25 @@ public class WaveManager : MonoBehaviour
 
     private void HandleWaveSuccess()
     {
-        isWaveActive_ = false;
-        enemies_.Clear();
+        _isWaveActive = false;
+        _enemies.Clear();
         GameManager.Instance.UpdateGameState(GameState.ShopMenu);
     }
 
     private void HandleWaveFailure()
     {
-        isWaveActive_ = false;
+        _isWaveActive = false;
         GameManager.Instance.UpdateGameState(GameState.Lose);
     }
 
     public static WaveManager Instance { get; private set; }
-    [SerializeField] private GameObject[] enemyPrefabs_;
-    private int currentWave_;
-    private int enemiesPerWave_;
-    private bool isWaveActive_;
-    private bool isSpawningComplete_;
-    private List<GameObject> enemies_;
-    private Timer timer_;
+    [SerializeField] private GameObject[] _enemyPrefabs;
+    private int _currentWave;
+    private int _enemiesPerWave;
+    private bool _isWaveActive;
+    private bool _isSpawningComplete;
+    private List<GameObject> _enemies;
+    private Timer _timer;
 
     private Vector3[] ENEMY_POSSIBLE_SPAWNS = {
         new Vector3(-35.0f, -1.5f, 0.0f),
