@@ -20,6 +20,7 @@ public class WaveManager : MonoBehaviour
         currentWave_ = INITIALIZATION_VALUE;
         enemiesPerWave_ = INITIALIZATION_VALUE;
         isWaveActive_ = false;
+        isSpawningComplete_ = false;
         timer_ = GetComponent<Timer>();
         timer_.OnTimerEnd += HandleOnTimerEnd;
         enemies_ = new List<GameObject>();
@@ -32,16 +33,17 @@ public class WaveManager : MonoBehaviour
         {
             return;
         }
-        isWaveActive_ = false;
         if (IsWaveDead())
         {
-            enemies_.Clear();
             timer_.StopTimer();
+            HandleWaveSuccess();
             GameManager.Instance.UpdateGameState(GameState.ShopMenu);
             return;
         }
         if (timer_.HasExpired())
         {
+            timer_.StopTimer();
+            HandleWaveFailure();
             GameManager.Instance.UpdateGameState(GameState.Lose);
         }
     }
@@ -50,35 +52,35 @@ public class WaveManager : MonoBehaviour
     {
         currentWave_++;
         enemiesPerWave_ += 5;
-        if (IsBossWave())
-        {
-            //to do: handle boss logic (change enemystats, generate less enemies)
-            return;
-        }
-        for (int enemyIndex = FIRST_ENEMY_INDEX; enemyIndex < enemiesPerWave_; enemyIndex++)
-        {
-            GameObject enemyToSpawn = enemyPrefabs_[Random.Range(FIRST_ENEMY_INDEX, enemyPrefabs_.Length)];
-            //to do: change some enemystats
-            GameObject spawnedEnemy = Instantiate(enemyToSpawn,
-                ENEMY_POSSIBLE_SPAWNS[Random.Range(FIRST_ENEMY_SPAWN_LOCATION_INDEX, ENEMY_POSSIBLE_SPAWNS.Length)],
-                Quaternion.identity);
-            enemies_.Add(spawnedEnemy);
-        }
+        isSpawningComplete_ = false;
+        StartCoroutine(SpawnEnemiesOverTime());
         timer_.StartTimerForSeconds(Random.Range(MIN_WAVE_TIME, MAX_WAVE_TIME));
         isWaveActive_ = true;
     }
 
+    private IEnumerator SpawnEnemiesOverTime()
+    {
+        for (int enemyIndex = FIRST_ENEMY_INDEX; enemyIndex < enemiesPerWave_; enemyIndex++)
+        {
+            GameObject enemyToSpawn = enemyPrefabs_[Random.Range(FIRST_ENEMY_INDEX, enemyPrefabs_.Length)];
+            GameObject spawnedEnemy = Instantiate(enemyToSpawn,
+                ENEMY_POSSIBLE_SPAWNS[Random.Range(FIRST_ENEMY_SPAWN_LOCATION_INDEX, ENEMY_POSSIBLE_SPAWNS.Length)],
+                Quaternion.identity);
+            enemies_.Add(spawnedEnemy);
+            yield return new WaitForSeconds(Random.Range(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY));
+        }
+        isSpawningComplete_ = true;
+    }
+
     private void HandleOnTimerEnd()
     {
-        timer_.OnTimerEnd -= HandleOnTimerEnd;
-        isWaveActive_ = false;
+        timer_.StopTimer();
         if (IsWaveDead())
         {
-            enemies_.Clear();
-            GameManager.Instance.UpdateGameState(GameState.ShopMenu);
+            HandleWaveSuccess();
             return;
         }
-        GameManager.Instance.UpdateGameState(GameState.Lose);
+        HandleWaveFailure();
     }
 
     private bool IsBossWave()
@@ -88,6 +90,10 @@ public class WaveManager : MonoBehaviour
 
     private bool IsWaveDead()
     {
+        if (!isSpawningComplete_)
+        {
+            return false;
+        }
         foreach (GameObject enemy in enemies_)
         {
             if (enemy != null)
@@ -98,11 +104,25 @@ public class WaveManager : MonoBehaviour
         return true;
     }
 
+    private void HandleWaveSuccess()
+    {
+        isWaveActive_ = false;
+        enemies_.Clear();
+        GameManager.Instance.UpdateGameState(GameState.ShopMenu);
+    }
+
+    private void HandleWaveFailure()
+    {
+        isWaveActive_ = false;
+        GameManager.Instance.UpdateGameState(GameState.Lose);
+    }
+
     public static WaveManager Instance { get; private set; }
     [SerializeField] private GameObject[] enemyPrefabs_;
     private int currentWave_;
     private int enemiesPerWave_;
     private bool isWaveActive_;
+    private bool isSpawningComplete_;
     private List<GameObject> enemies_;
     private Timer timer_;
 
@@ -113,6 +133,8 @@ public class WaveManager : MonoBehaviour
 
     private const float MIN_WAVE_TIME = 45f;
     private const float MAX_WAVE_TIME = 91f;
+    private const float MIN_SPAWN_DELAY = 2f;
+    private const float MAX_SPAWN_DELAY = 5f;
     private const int FIRST_ENEMY_SPAWN_LOCATION_INDEX = 0;
     private const int FIRST_ENEMY_INDEX = 0;
     private const int BOSS_WAVE_INTERVAL = 5;
