@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour
         _coinManager.SpendCoins(amount);
     }
 
+    public bool HasCoins(int amount)
+    {
+        return _coinManager.HasCoins(amount);
+    }
+
     void Awake()
     {
         if (Instance != null && Instance != this)

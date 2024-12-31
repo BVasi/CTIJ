@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public void IncreaseSpeed(int amount) //to do: refactor inside playerstats
+    {
+        _speed += amount;
+    }
+
+    public void IncreaseDamage(int amount) //to do: refactor inside playerstats
+    {
+        _attackDamage += amount;
+    }
+
     void Start()
     {
         _ridigBody = GetComponent<Rigidbody2D>();

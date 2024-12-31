@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoinManager : MonoBehaviour
+public class CoinManager : MonoBehaviour //to do: refactor inside playerstats
 {
     void Awake()
     {
@@ -16,11 +16,16 @@ public class CoinManager : MonoBehaviour
 
     public void SpendCoins(int amount)
     {
-        if (_coins < amount)
+        if (!HasCoins(amount))
         {
             return;
         }
         _coins -= amount;
+    }
+
+    public bool HasCoins(int amount)
+    {
+        return _coins > amount;
     }
 
     private int _coins;

@@ -50,9 +50,16 @@ public class MenuManager : MonoBehaviour
             if (!isMainGameLoadedForTheFirstTime)
             {
                 WaveManager.Instance.StartNextWave();
+                PlayerController.Instance.ResetToSafePosition();
             }
             isMainGameLoadedForTheFirstTime = false;
+            return;
         }
+        if (WaveManager.Instance == null)
+        {
+            return;
+        }
+        WaveManager.Instance.StopWave();
     }
 
     private void HandleMainMenuState()

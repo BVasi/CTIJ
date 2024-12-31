@@ -53,12 +53,31 @@ public class WaveManager : MonoBehaviour
         _currentWave++;
         _enemiesPerWave += 5;
         _isSpawningComplete = false;
-        StartCoroutine(SpawnEnemiesOverTime());
+        _waveCoroutine = StartCoroutine(SpawnEnemiesOverTime());
         _timer.StartTimerForSeconds(Random.Range(MIN_WAVE_TIME, MAX_WAVE_TIME));
         _isWaveActive = true;
     }
 
-    private IEnumerator SpawnEnemiesOverTime() //to do: stop if game over
+    public void StopWave()
+    {
+        if (_waveCoroutine != null)
+        {
+            StopCoroutine(_waveCoroutine);
+            _waveCoroutine = null;
+        }
+        _isWaveActive = false;
+        _isSpawningComplete = true;
+        foreach (var enemy in _enemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy);
+            }
+        }
+        _enemies.Clear();
+    }
+
+    private IEnumerator SpawnEnemiesOverTime()
     {
         for (int enemyIndex = FIRST_ENEMY_INDEX; enemyIndex < _enemiesPerWave; enemyIndex++)
         {
@@ -66,10 +85,22 @@ public class WaveManager : MonoBehaviour
             GameObject spawnedEnemy = Instantiate(enemyToSpawn,
                 ENEMY_POSSIBLE_SPAWNS[Random.Range(FIRST_ENEMY_SPAWN_LOCATION_INDEX, ENEMY_POSSIBLE_SPAWNS.Length)],
                 Quaternion.identity);
+            SetEnemyStats(spawnedEnemy);
             _enemies.Add(spawnedEnemy);
             yield return new WaitForSeconds(Random.Range(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY));
         }
         _isSpawningComplete = true;
+    }
+
+    private void SetEnemyStats(GameObject enemy)
+    {
+        if (IsBossWave())
+        {
+            enemy.GetComponent<EnemyStats>().IncreaseDamage(Random.Range(MIN_INCREASED_DAMAGE, MAX_INCREASED_DAMAGE));
+            enemy.GetComponent<EnemyStats>().IncreaseHealth(Random.Range(MIN_INCREASED_HEALTH, MAX_INCREASED_HEALTH));
+            enemy.transform.localScale *= 1.2f;
+            return;
+        }
     }
 
     private void HandleOnTimerEnd()
@@ -106,14 +137,13 @@ public class WaveManager : MonoBehaviour
 
     private void HandleWaveSuccess()
     {
-        _isWaveActive = false;
-        _enemies.Clear();
+        StopWave();
         GameManager.Instance.UpdateGameState(GameState.ShopMenu);
     }
 
     private void HandleWaveFailure()
     {
-        _isWaveActive = false;
+        StopWave();
         GameManager.Instance.UpdateGameState(GameState.Lose);
     }
 
@@ -125,6 +155,7 @@ public class WaveManager : MonoBehaviour
     private bool _isSpawningComplete;
     private List<GameObject> _enemies;
     private Timer _timer;
+    private Coroutine _waveCoroutine;
 
     private Vector3[] ENEMY_POSSIBLE_SPAWNS = {
         new Vector3(-35.0f, -1.5f, 0.0f),
@@ -139,4 +170,8 @@ public class WaveManager : MonoBehaviour
     private const int FIRST_ENEMY_INDEX = 0;
     private const int BOSS_WAVE_INTERVAL = 5;
     private const int INITIALIZATION_VALUE = 0;
+    private const int MIN_INCREASED_DAMAGE = 5;
+    private const int MAX_INCREASED_DAMAGE = 10;
+    private const int MIN_INCREASED_HEALTH = 10;
+    private const int MAX_INCREASED_HEALTH = 30;
 }

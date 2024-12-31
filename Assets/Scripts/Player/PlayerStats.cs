@@ -10,16 +10,33 @@ public class PlayerStats : MonoBehaviour
         _health = 100;
         _damage = 10;
         _maxHealth = 100;
+        _isShielded = false;
     }
 
     public void TakeDamage(int damage)
     {
+        if (_isShielded)
+        {
+            _isShielded = false;
+            return;
+        }
         _health -= damage;
         if (_health < NO_HEALTH)
         {
             Die();
         }
 
+        StartCoroutine(AnimateHealthBar(CalculateHealthPercentage()));
+    }
+
+    public void Shield()
+    {
+        _isShielded = true;
+    }
+
+    public void Heal(int amount)
+    {
+        _health = Mathf.Min(_health + amount, _maxHealth);
         StartCoroutine(AnimateHealthBar(CalculateHealthPercentage()));
     }
 
@@ -31,6 +48,16 @@ public class PlayerStats : MonoBehaviour
     public void DecreaseDamage(int valueToDecrease)
     {
         _damage -= valueToDecrease;
+    }
+
+    public bool IsFullHealth()
+    {
+        return _health == _maxHealth;
+    }
+
+    public bool IsShielded()
+    {
+        return _isShielded;
     }
 
     private IEnumerator AnimateHealthBar(float targetFillAmount)
@@ -62,6 +89,7 @@ public class PlayerStats : MonoBehaviour
     private int _health;
     private int _maxHealth;
     private int _damage;
+    private bool _isShielded;
     private const int NO_HEALTH = 0;
     private const float ANIMATION_DURATION = 1f;
 }

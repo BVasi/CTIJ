@@ -3,6 +3,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
+public enum ItemType
+{
+    //ACTIVE
+    Health,
+    Shield,
+    //PASIVE
+    Speed,
+    Strenght,
+}
+
 public class ShopSystem : MonoBehaviour
 {
     [System.Serializable]
@@ -11,7 +21,8 @@ public class ShopSystem : MonoBehaviour
         public Sprite image;
         public string title;
         public string description;
-        public float price;
+        public int price;
+        public ItemType itemType;
     }
 
     public List<Item> items = new List<Item>();
@@ -23,7 +34,6 @@ public class ShopSystem : MonoBehaviour
         PopulateItemList();
         GenerateShopItems();
         DisplayItems();
-        GameManager.Instance.UpdateGameState(GameState.MainGamePlay); //to do: make this after user presses action
     }
 
     void PopulateItemList()
@@ -33,15 +43,17 @@ public class ShopSystem : MonoBehaviour
             image = Resources.Load<Sprite>("Health"),
             title = "Health",
             description = "Adds an extra amount of health",
-            price = 50f
+            price = 0,
+            itemType = ItemType.Health
         });
 
         items.Add(new Item
         {
-            image = Resources.Load<Sprite>("fireball"),
+            image = Resources.Load<Sprite>("fireball"), //to do: change to strenght
             title = "Fireball",
             description = "Grants you the ability to shoot fireballs",
-            price = 60f
+            price = 0,
+            itemType = ItemType.Strenght
         });
 
         items.Add(new Item
@@ -49,7 +61,8 @@ public class ShopSystem : MonoBehaviour
             image = Resources.Load<Sprite>("speed"),
             title = "Speed",
             description = "Grants you extra speed",
-            price = 20f
+            price = 0,
+            itemType = ItemType.Speed
         });
 
         items.Add(new Item
@@ -57,7 +70,8 @@ public class ShopSystem : MonoBehaviour
             image = Resources.Load<Sprite>("shield"),
             title = "Shield",
             description = "Grants you the shield effect",
-            price = 40f
+            price = 0,
+            itemType = ItemType.Shield
         });
     }
 
@@ -134,7 +148,14 @@ public class ShopSystem : MonoBehaviour
 
     void OnItemPurchase(Item item)
     {
-        Debug.Log($"Bought: {item.title} pentru {item.price:F2}!");
-        // Aici poți adăuga funcționalitatea pentru cumpărare
+        if (!GameManager.Instance.HasCoins(item.price))
+        {
+            Debug.Log("Sarakie mare");
+            GameManager.Instance.UpdateGameState(GameState.MainGamePlay);
+            return;
+        }
+        GameManager.Instance.SpendCoins(item.price);
+        PlayerController.Instance.AddItem(item.itemType);
+        GameManager.Instance.UpdateGameState(GameState.MainGamePlay); //to do: make this after user presses next wave button (rn cant buy more than 1 item)
     }
 }
