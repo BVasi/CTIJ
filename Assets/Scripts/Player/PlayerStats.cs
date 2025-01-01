@@ -40,6 +40,11 @@ public class PlayerStats : MonoBehaviour
         StartCoroutine(AnimateHealthBar(CalculateHealthPercentage()));
     }
 
+    public void IncreaseMaxHealth(int amount)
+    {
+        _maxHealth += amount;
+    }
+
     public void IncreaseDamage(int valueToIncrease)
     {
         _damage += valueToIncrease;

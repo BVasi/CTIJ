@@ -4,26 +4,36 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public void ImproveStat(StatType stat, int improvedAmount)
+    {
+        switch (stat)
+        {
+            case StatType.Health:
+            {
+                _playerStats.IncreaseMaxHealth(improvedAmount);
+                break;
+            }
+            case StatType.Speed:
+            {
+                _playerMovement.IncreaseSpeed(improvedAmount);
+                break;
+            }
+            case StatType.Damage:
+            {
+                _playerMovement.IncreaseDamage(improvedAmount);
+                break;
+            }
+        }
+    }
+
     public void AddItem(ItemType item)
     {
         switch (item)
         {
-            //ACTIVE
             case ItemType.Health:
             case ItemType.Shield:
             {
                 _playerInventory.AddItem(item);
-                break;
-            }
-            //PASIVE
-            case ItemType.Speed:
-            {
-                _playerMovement.IncreaseSpeed(2);
-                break;
-            }
-            case ItemType.Strenght:
-            {
-                _playerMovement.IncreaseDamage(10);
                 break;
             }
         }
@@ -84,4 +94,5 @@ public class PlayerController : MonoBehaviour
     private PlayerInventory _playerInventory;
 
     private readonly Vector3 SAFE_POSITION = new Vector3(0, -2, 0);
+    private const string ITEM_TAG = "Item";
 }

@@ -3,14 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public enum ItemType
+public enum StatType
 {
-    //ACTIVE
     Health,
-    Shield,
-    //PASIVE
     Speed,
-    Strenght,
+    Damage
 }
 
 public class ShopSystem : MonoBehaviour
@@ -22,7 +19,8 @@ public class ShopSystem : MonoBehaviour
         public string title;
         public string description;
         public int price;
-        public ItemType itemType;
+        public StatType statType;
+        public int improvedAmount;
     }
 
     public List<Item> items = new List<Item>();
@@ -40,38 +38,30 @@ public class ShopSystem : MonoBehaviour
     {
         items.Add(new Item
         {
-            image = Resources.Load<Sprite>("Health"),
+            image = Resources.Load<Sprite>("health"),
             title = "Health",
             description = "Adds an extra amount of health",
             price = 0,
-            itemType = ItemType.Health
+            statType = StatType.Health,
+            improvedAmount = 15
         });
-
-        items.Add(new Item
-        {
-            image = Resources.Load<Sprite>("fireball"), //to do: change to strenght
-            title = "Fireball",
-            description = "Grants you the ability to shoot fireballs",
-            price = 0,
-            itemType = ItemType.Strenght
-        });
-
         items.Add(new Item
         {
             image = Resources.Load<Sprite>("speed"),
             title = "Speed",
             description = "Grants you extra speed",
             price = 0,
-            itemType = ItemType.Speed
+            statType = StatType.Speed,
+            improvedAmount = 2
         });
-
         items.Add(new Item
         {
-            image = Resources.Load<Sprite>("shield"),
-            title = "Shield",
-            description = "Grants you the shield effect",
+            image = Resources.Load<Sprite>("shield"), //to do: change for some kind of damage sprite
+            title = "Damage",
+            description = "Grants you extra damage",
             price = 0,
-            itemType = ItemType.Shield
+            statType = StatType.Damage,
+            improvedAmount = 10
         });
     }
 
@@ -155,7 +145,7 @@ public class ShopSystem : MonoBehaviour
             return;
         }
         GameManager.Instance.SpendCoins(item.price);
-        PlayerController.Instance.AddItem(item.itemType);
+        PlayerController.Instance.ImproveStat(item.statType, item.improvedAmount);
         GameManager.Instance.UpdateGameState(GameState.MainGamePlay); //to do: make this after user presses next wave button (rn cant buy more than 1 item)
     }
 }
