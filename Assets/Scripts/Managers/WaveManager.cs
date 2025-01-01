@@ -100,8 +100,8 @@ public class WaveManager : MonoBehaviour
 
     private void SetEnemyStats(GameObject enemy)
     {
-        enemy.GetComponent<EnemyStats>().IncreaseDamage(Mathf.Ceiling(_currentWave * DIFFICULTY_MULTIPLIER));
-        enemy.GetComponent<EnemyStats>().IncreaseHealth(Mathf.Ceiling(_currentWave * DIFFICULTY_MULTIPLIER));
+        enemy.GetComponent<EnemyStats>().IncreaseDamage(Mathf.Ceil(_currentWave * DIFFICULTY_MULTIPLIER));
+        enemy.GetComponent<EnemyStats>().IncreaseHealth(Mathf.Ceil(_currentWave * DIFFICULTY_MULTIPLIER));
         if (IsBossWave())
         {
             enemy.GetComponent<EnemyStats>().IncreaseDamage(Random.Range(MIN_INCREASED_DAMAGE, MAX_INCREASED_DAMAGE));
