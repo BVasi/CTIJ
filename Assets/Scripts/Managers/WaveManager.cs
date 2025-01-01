@@ -17,10 +17,7 @@ public class WaveManager : MonoBehaviour
 
     void Start()
     {
-        _currentWave = INITIALIZATION_VALUE;
-        _enemiesPerWave = INITIALIZATION_VALUE;
-        _isWaveActive = false;
-        _isSpawningComplete = false;
+        ResetWaves();
         _timer = GetComponent<Timer>();
         _timer.OnTimerEnd += HandleOnTimerEnd;
         _enemies = new List<GameObject>();
@@ -46,6 +43,15 @@ public class WaveManager : MonoBehaviour
             HandleWaveFailure();
             GameManager.Instance.UpdateGameState(GameState.Lose);
         }
+        Debug.Log($"Time remaining = {_timer.GetTimeRemainingInSeconds()} seconds"); //to do: show inside UI
+    }
+
+    public void ResetWaves()
+    {
+        _currentWave = INITIALIZATION_VALUE;
+        _enemiesPerWave = INITIALIZATION_VALUE;
+        _isWaveActive = false;
+        _isSpawningComplete = false;
     }
 
     public void StartNextWave()
@@ -94,6 +100,8 @@ public class WaveManager : MonoBehaviour
 
     private void SetEnemyStats(GameObject enemy)
     {
+        enemy.GetComponent<EnemyStats>().IncreaseDamage(Mathf.Ceiling(_currentWave * DIFFICULTY_MULTIPLIER));
+        enemy.GetComponent<EnemyStats>().IncreaseHealth(Mathf.Ceiling(_currentWave * DIFFICULTY_MULTIPLIER));
         if (IsBossWave())
         {
             enemy.GetComponent<EnemyStats>().IncreaseDamage(Random.Range(MIN_INCREASED_DAMAGE, MAX_INCREASED_DAMAGE));
@@ -162,6 +170,7 @@ public class WaveManager : MonoBehaviour
         new Vector3(35.0f, -1.5f, 0.0f)
     };
 
+    private const float DIFFICULTY_MULTIPLIER = 1.1f;
     private const float MIN_WAVE_TIME = 45f;
     private const float MAX_WAVE_TIME = 91f;
     private const float MIN_SPAWN_DELAY = 2f;

@@ -9,9 +9,19 @@ public class PlayerMovement : MonoBehaviour
         _speed += amount;
     }
 
+    public void DecreaseSpeed(int amount) //to do: refactor inside playerstats
+    {
+        _speed -= amount;
+    }
+
     public void IncreaseDamage(int amount) //to do: refactor inside playerstats
     {
         _attackDamage += amount;
+    }
+
+    public void DecreaseDamage(int amount) //to do: refactor inside playerstats
+    {
+        _attackDamage -= amount;
     }
 
     void Start()

@@ -41,6 +41,11 @@ public class Timer : MonoBehaviour
         return timeRemaining_ <= EXPIRED_TIMER_VALUE;
     }
 
+    public int GetTimeRemainingInSeconds()
+    {
+        return (int)timeRemaining_;
+    }
+
     public event System.Action OnTimerEnd;
     private bool isRunning_;
     private float timeRemaining_;

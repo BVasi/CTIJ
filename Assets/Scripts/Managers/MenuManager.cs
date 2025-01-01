@@ -75,6 +75,7 @@ public class MenuManager : MonoBehaviour
     private void HandleLoseState()
     {
         SceneManager.LoadScene(GAME_OVER_SCENE_NAME);
+        WaveManager.Instance.ResetWaves();
     }
 
     private void HandleMainGamePlayState()

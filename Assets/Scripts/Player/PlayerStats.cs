@@ -45,6 +45,11 @@ public class PlayerStats : MonoBehaviour
         _maxHealth += amount;
     }
 
+    public void DecreaseMaxHealth(int amount)
+    {
+        _maxHealth -= amount;
+    }
+
     public void IncreaseDamage(int valueToIncrease)
     {
         _damage += valueToIncrease;

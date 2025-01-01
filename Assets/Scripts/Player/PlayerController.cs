@@ -4,23 +4,45 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public void ImproveStat(StatType stat, int improvedAmount)
+    public void ImproveStat(StatType stat, int improveAmount)
     {
         switch (stat)
         {
             case StatType.Health:
             {
-                _playerStats.IncreaseMaxHealth(improvedAmount);
+                _playerStats.IncreaseMaxHealth(improveAmount);
                 break;
             }
             case StatType.Speed:
             {
-                _playerMovement.IncreaseSpeed(improvedAmount);
+                _playerMovement.IncreaseSpeed(improveAmount);
                 break;
             }
             case StatType.Damage:
             {
-                _playerMovement.IncreaseDamage(improvedAmount);
+                _playerMovement.IncreaseDamage(improveAmount);
+                break;
+            }
+        }
+    }
+
+    public void ReduceStat(StatType stat, int reduceAmount)
+    {
+        switch (stat)
+        {
+            case StatType.Health:
+            {
+                _playerStats.DecreaseMaxHealth(reduceAmount);
+                break;
+            }
+            case StatType.Speed:
+            {
+                _playerMovement.DecreaseSpeed(reduceAmount);
+                break;
+            }
+            case StatType.Damage:
+            {
+                _playerMovement.DecreaseDamage(reduceAmount);
                 break;
             }
         }
@@ -31,6 +53,8 @@ public class PlayerController : MonoBehaviour
         switch (item)
         {
             case ItemType.Health:
+            case ItemType.TemporaryDamage:
+            case ItemType.TemporarySpeed:
             case ItemType.Shield:
             {
                 _playerInventory.AddItem(item);
@@ -86,6 +110,31 @@ public class PlayerController : MonoBehaviour
             _playerStats.Shield();
             _playerInventory.RemoveItem(ItemType.Shield);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            if (!_playerInventory.HasItem(ItemType.TemporaryDamage))
+            {
+                return;
+            }
+            StartCoroutine(ApplyTemporaryBoost(ItemType.TemporaryDamage, 20, 8)); //to do: not hardcoded
+            _playerInventory.RemoveItem(ItemType.TemporaryDamage);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            if (!_playerInventory.HasItem(ItemType.TemporarySpeed))
+            {
+                return;
+            }
+            StartCoroutine(ApplyTemporaryBoost(ItemType.TemporarySpeed, 7, 10)); //to do: not hardcoded
+            _playerInventory.RemoveItem(ItemType.TemporarySpeed);
+        }
+    }
+
+    private IEnumerator ApplyTemporaryBoost(ItemType itemType, int boostAmount, float duration)
+    {
+        ImproveStat((StatType)(int)itemType, boostAmount);
+        yield return new WaitForSeconds(duration);
+        ReduceStat((StatType)(int)itemType, boostAmount);
     }
 
     public static PlayerController Instance { get; private set; }

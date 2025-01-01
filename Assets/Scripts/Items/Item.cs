@@ -5,7 +5,9 @@ using UnityEngine;
 public enum ItemType
 {
     Health,
-    Shield,
+    TemporarySpeed,
+    TemporaryDamage,
+    Shield
 }
 
 public class Item : MonoBehaviour
@@ -56,10 +58,14 @@ public class Item : MonoBehaviour
     {
         {ItemType.Health, HEALTH_ITEM_SPRITE_NAME},
         {ItemType.Shield, SHIELD_ITEM_SPRITE_NAME},
+        {ItemType.TemporaryDamage, DAMAGE_ITEM_SPRITE_NAME},
+        {ItemType.TemporarySpeed, SPEED_ITEM_SPRITE_NAME}
     };
     private const int FIRST_ITEM_TYPE_INDEX = 0;
     private const string HEALTH_ITEM_SPRITE_NAME = "health";
     private const string SHIELD_ITEM_SPRITE_NAME = "shield";
+    private const string DAMAGE_ITEM_SPRITE_NAME = "damage";
+    private const string SPEED_ITEM_SPRITE_NAME = "speed";
     private const float DESIRED_WIDTH = 0.7f;
     private const float DESIRED_HEIGHT = 0.7f;
 }
