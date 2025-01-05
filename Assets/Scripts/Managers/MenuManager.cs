@@ -35,6 +35,11 @@ public class MenuManager : MonoBehaviour
                 HandleMainGamePlayState();
                 break;
             }
+            case GameState.SettingsMenu:
+            {
+                HandleSettingsMenuState();
+                break;
+            }
             case GameState.Quit:
             {
                 Application.Quit();
@@ -83,10 +88,16 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(MAIN_GAME_SCENE_NAME);
     }
 
+    private void HandleSettingsMenuState()
+    {
+        SceneManager.LoadScene(SETTINGS_MENU_SCENE_NAME);
+    }
+
     private const string MAIN_MENU_SCENE_NAME = "MainMenu";
     private const string MAIN_GAME_SCENE_NAME = "MainGameScene";
     private const string GAME_OVER_SCENE_NAME = "GameOver";
     private const string SHOP_SCENE_NAME = "Shop";
+    private const string SETTINGS_MENU_SCENE_NAME = "SettingsMenu";
 
     private bool isMainGameLoadedForTheFirstTime; //to do: find better solution than using this variable
 }
