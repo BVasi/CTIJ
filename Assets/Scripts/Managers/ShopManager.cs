@@ -40,7 +40,7 @@ public class ShopManager : MonoBehaviour
         {
             image = Resources.Load<Sprite>("health"),
             title = "Health",
-            description = "Adds an extra amount of health",
+            description = "Adds extra health",
             price = 0,
             statType = StatType.Health,
             improvedAmount = 15
@@ -136,12 +136,20 @@ public class ShopManager : MonoBehaviour
     {
         if (!GameManager.Instance.HasCoins(stat.price))
         {
-            Debug.Log("Sarakie mare");
-            GameManager.Instance.UpdateGameState(GameState.MainGamePlay);
-            return;
+            Debug.Log("Not enough coins");
+            return; 
         }
+
         GameManager.Instance.SpendCoins(stat.price);
         PlayerController.Instance.ImproveStat(stat.statType, stat.improvedAmount);
-        GameManager.Instance.UpdateGameState(GameState.MainGamePlay); //to do: make this after user presses next wave button (rn cant buy more than 1 item)
+
+        Debug.Log("Stat improved. Player can make more purchases or press Next Wave to continue.");
     }
+
+    public void OnNextWaveButtonPressed()
+    {
+        GameManager.Instance.UpdateGameState(GameState.MainGamePlay);
+    }
+
+
 }
