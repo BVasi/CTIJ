@@ -11,6 +11,7 @@ public class PlayerStats : MonoBehaviour
         _damage = 10;
         _maxHealth = 100;
         _isShielded = false;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void TakeDamage(int damage)
@@ -21,6 +22,7 @@ public class PlayerStats : MonoBehaviour
             return;
         }
         _health -= damage;
+        _audioSource.Play(); //to do: find why this plays at the start of the game
         if (_health < NO_HEALTH)
         {
             Die();
@@ -95,11 +97,13 @@ public class PlayerStats : MonoBehaviour
         GameManager.Instance.UpdateGameState(GameState.Lose);
     }
 
-    [SerializeField] private Image _healthBar; //to do: put this in UIManager and update it there
+    [SerializeField] private Image _healthBar; //to do: put this in UIManager and update it there, possible bug here (move image through scenes even though its not there)
+    private AudioSource _audioSource; //to do: refactor
     private int _health;
     private int _maxHealth;
     private int _damage;
     private bool _isShielded;
     private const int NO_HEALTH = 0;
+    private const int NO_DAMAGE = 0;
     private const float ANIMATION_DURATION = 1f;
 }

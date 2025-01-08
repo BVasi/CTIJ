@@ -9,11 +9,11 @@ public enum StatType
     Speed,
     Damage
 }
-[System.Serializable]
 
+[System.Serializable]
 public class Stat
 {
-    public Sprite image;
+    public string imageName;
     public string title;
     public string description;
     public int price;
@@ -23,133 +23,128 @@ public class Stat
 
 public class ShopManager : MonoBehaviour
 {
-    public List<Stat> stats = new List<Stat>();
-    public GameObject statPrefab;
-    public Transform statContainer;
-    public int statsToDisplay = 3;
-    void Start()
-    {
-        PopulateStatList();
-        GenerateShopStats();
-        DisplayStats();
-    }
-
-    void PopulateStatList()
-    {
-        stats.Add(new Stat
-        {
-            image = Resources.Load<Sprite>("health"),
-            title = "Health",
-            description = "Adds extra health",
-            price = 0,
-            statType = StatType.Health,
-            improvedAmount = 15
-        });
-        stats.Add(new Stat
-        {
-            image = Resources.Load<Sprite>("speed"),
-            title = "Speed",
-            description = "Grants you extra speed",
-            price = 0,
-            statType = StatType.Speed,
-            improvedAmount = 2
-        });
-        stats.Add(new Stat
-        {
-            image = Resources.Load<Sprite>("damage"), //to do: change for some kind of damage sprite
-            title = "Damage",
-            description = "Grants you extra damage",
-            price = 0,
-            statType = StatType.Damage,
-            improvedAmount = 10
-        });
-    }
-
-    void GenerateShopStats()
-    {
-        if (stats.Count < statsToDisplay)
-        {
-            Debug.LogWarning("Not Enough Elements!");
-            return;
-        }
-
-        List<Stat> randomStats = new List<Stat>();
-
-        while (randomStats.Count < statsToDisplay)
-        {
-            int randomIndex = Random.Range(0, stats.Count);
-            Stat randomStat = stats[randomIndex];
-
-            if (!randomStats.Contains(randomStat))
-            {
-                randomStats.Add(randomStat);
-            }
-        }
-
-        foreach (Stat stat in randomStats)
-        {
-            GameObject newStat = Instantiate(statPrefab, statContainer);
-
-            Image statImage = newStat.transform.Find("Image").GetComponent<Image>();
-            statImage.sprite = stat.image;
-
-            Text titleText = newStat.transform.Find("Title").GetComponent<Text>();
-            titleText.text = stat.title;
-
-            Text descriptionText = newStat.transform.Find("Description").GetComponent<Text>();
-            descriptionText.text = stat.description;
-
-            Text priceText = newStat.transform.Find("Price").GetComponent<Text>();
-            priceText.text = $"Price: {stat.price:F2} ";
-
-            Button statButton = newStat.transform.Find("Button").GetComponent<Button>();
-            statButton.onClick.AddListener(() => OnStatPurchase(stat));
-        }
-    }
-
-
-    void DisplayStats()
-    {
-        var randomStats = stats.OrderBy(x => Random.value).Take(3).ToList();
-
-        foreach (var stat in randomStats)
-        {
-
-            GameObject newStat = Instantiate(statPrefab, statContainer);
-
-            Image statImage = newStat.transform.Find("Image").GetComponent<Image>();
-            if (statImage != null) statImage.sprite = stat.image;
-
-            Text statTitle = newStat.transform.Find("Title").GetComponent<Text>();
-            if (statTitle != null) statTitle.text = stat.title;
-
-            Text statDescription = newStat.transform.Find("Description").GetComponent<Text>();
-            if (statDescription != null) statDescription.text = stat.description;
-
-            Text statPrice = newStat.transform.Find("Price").GetComponent<Text>();
-            if (statPrice != null) statPrice.text = "$" + stat.price.ToString("F2");
-        }
-    }
-
-
-    void OnStatPurchase(Stat stat)
-    {
-        if (!GameManager.Instance.HasCoins(stat.price))
-        {
-            Debug.Log("Not enough coins");
-            return; 
-        }
-
-        GameManager.Instance.SpendCoins(stat.price);
-        PlayerController.Instance.ImproveStat(stat.statType, stat.improvedAmount);
-
-        Debug.Log("Stat improved. Player can make more purchases or press Next Wave to continue.");
-    }
-
     public void OnNextWaveButtonPressed()
     {
         GameManager.Instance.UpdateGameState(GameState.MainGamePlay);
     }
 
+    void Start()
+    {
+        GenerateShopStats();
+    }
 
+    private void GenerateShopStats()
+    {
+        if (ALL_STATS.Count < STATS_TO_DISPLAY)
+        {
+            return;
+        }
+        List<Stat> randomStats = ALL_STATS.OrderBy(x => Random.value).Take(STATS_TO_DISPLAY).ToList();
+        while (randomStats.Count < STATS_TO_DISPLAY)
+        {
+            int randomIndex = Random.Range(FIRST_STAT_INDEX, ALL_STATS.Count);
+            Stat randomStat = ALL_STATS[randomIndex];
+            randomStats.Add(randomStat);
+        }
+        foreach (Stat stat in randomStats)
+        {
+            GameObject newStat = Instantiate(statPrefab, statContainer);
+            SetStatUI(newStat, stat);
+        }
+    }
+
+    private void SetStatUI(GameObject statObject, Stat stat)
+    {
+        Image statImage = statObject.transform.Find(STAT_OBJECT_IMAGE).GetComponent<Image>();
+        if (statImage != null)
+        {
+            statImage.sprite = Resources.Load<Sprite>(stat.imageName);
+        }
+        Text statTitle = statObject.transform.Find(STAT_OBJECT_TITLE).GetComponent<Text>();
+        if (statTitle != null)
+        {
+            statTitle.text = stat.title;
+        }
+        Text statDescription = statObject.transform.Find(STAT_OBJECT_DESCRIPTION).GetComponent<Text>();
+        if (statDescription != null)
+        {
+            statDescription.text = stat.description;
+        }
+        Text statPrice = statObject.transform.Find(STAT_OBJECT_PRICE).GetComponent<Text>();
+        if (statPrice != null)
+        {
+            statPrice.text = "$" + stat.price.ToString("F2");
+        }
+        Button statButton = statObject.transform.Find(STAT_OBJECT_BUTTON).GetComponent<Button>();
+        statButton.onClick.AddListener(() => OnStatPurchase(statObject, stat));
+    }
+
+    private void OnStatPurchase(GameObject statObject, Stat stat)
+    {
+        if (!GameManager.Instance.HasCoins(stat.price))
+        {
+            return;
+        }
+        GameManager.Instance.SpendCoins(stat.price);
+        PlayerController.Instance.ImproveStat(stat.statType, stat.improvedAmount);
+        Destroy(statObject);
+    }
+
+    [SerializeField] private GameObject statPrefab;
+    [SerializeField] private Transform statContainer;
+
+    private readonly List<Stat> ALL_STATS = new List<Stat>()
+    {
+        new Stat
+        {
+            imageName = HEALTH_IMAGE_NAME,
+            title = HEALTH_TITLE,
+            description = HEALTH_DESCRIPTION,
+            price = HEALTH_PRICE,
+            statType = StatType.Health,
+            improvedAmount = HEALTH_IMPROVEMENT_AMOUNT
+        },
+        new Stat
+        {
+            imageName = SPEED_IMAGINE_NAME,
+            title = SPEED_TITLE,
+            description = SPEED_DESCRIPTION,
+            price = SPEED_PRICE,
+            statType = StatType.Speed,
+            improvedAmount = SPEED_IMPROVEMENT_AMOUNT
+        },
+        new Stat
+        {
+            imageName = DAMAGE_IMAGE_NAME,
+            title = DAMAGE_TITLE,
+            description = DAMAGE_DESCRIPTION,
+            price = DAMAGE_PRICE,
+            statType = StatType.Damage,
+            improvedAmount = DAMAGE_IMPROVEMENT_AMOUNT
+        }
+    };
+    private const int FIRST_STAT_INDEX = 0;
+    private const int STATS_TO_DISPLAY = 3;
+
+    private const string HEALTH_IMAGE_NAME = "health";
+    private const string HEALTH_TITLE = "Health";
+    private const string HEALTH_DESCRIPTION = "Adds extra health";
+    private const int HEALTH_PRICE = 0;
+    private const int HEALTH_IMPROVEMENT_AMOUNT = 15;
+    private const string SPEED_IMAGINE_NAME = "speed";
+    private const string SPEED_TITLE = "Speed";
+    private const string SPEED_DESCRIPTION = "Grants you extra speed";
+    private const int SPEED_PRICE = 0;
+    private const int SPEED_IMPROVEMENT_AMOUNT = 2;
+    private const string DAMAGE_IMAGE_NAME = "damage";
+    private const string DAMAGE_TITLE = "Damage";
+    private const string DAMAGE_DESCRIPTION = "Grants you extra damage";
+    private const int DAMAGE_PRICE = 0;
+    private const int DAMAGE_IMPROVEMENT_AMOUNT = 10;
+
+    private const string STAT_OBJECT_IMAGE = "Image";
+    private const string STAT_OBJECT_TITLE = "Title";
+    private const string STAT_OBJECT_DESCRIPTION = "Description";
+    private const string STAT_OBJECT_PRICE = "Price";
+    private const string STAT_OBJECT_BUTTON = "Button";
 }

@@ -389,10 +389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f805ad45d4c54544eb0d7834bac1d35f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: []
   statPrefab: {fileID: 7296256636412505058, guid: 1280a2e3a423fb14f9f10ec699cdf342, type: 3}
   statContainer: {fileID: 1519581143}
-  statsToDisplay: 3
 --- !u!1 &780936061
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,7 +756,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 825615355}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -945,7 +943,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -951.49994, y: 431.50003}
+  m_AnchoredPosition: {x: -951.49963, y: 431.49908}
   m_SizeDelta: {x: 300, y: 1540}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1519581144
@@ -1057,7 +1055,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1611113104}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 426065825}
+        m_TargetAssemblyTypeName: ShopManager, Assembly-CSharp
+        m_MethodName: OnNextWaveButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1611113104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1327,8 +1337,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 780936063}
   m_HandleRect: {fileID: 780936062}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.56038964
+  m_Value: 1.0000013
+  m_Size: 0.5603896
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
