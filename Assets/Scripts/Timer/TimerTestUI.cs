@@ -2,19 +2,19 @@
 
 public class TimerTestUI : MonoBehaviour
 {
-    public Timer timer; // Referință la componenta Timer
+    public Timer timer;
 
     void Start()
     {
         if (timer != null)
         {
             timer.OnTimerEnd += TimerEnded;
-            timer.StartTimerForSeconds(120); // Pornim un timer de 2 minute
+            timer.StartTimerForSeconds(120);
         }
     }
 
     private void TimerEnded()
     {
-        Debug.Log("Timerul UI s-a terminat!");
+        Debug.Log("Timer End!");
     }
 }

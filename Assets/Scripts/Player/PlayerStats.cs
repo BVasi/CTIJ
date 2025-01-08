@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    public Image ShieldImage;
-    public AudioClip damage_sound; 
-    private AudioSource audioSource;
+    
 
     void Start()
     {
@@ -16,6 +14,7 @@ public class PlayerStats : MonoBehaviour
         _maxHealth = 100;
         _isShielded = false;
         ShieldImage.enabled = false;
+        isImgOn = false;
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -28,8 +27,9 @@ public class PlayerStats : MonoBehaviour
     {
         if (_isShielded)
         {
-            _isShielded = false;
             ShieldImage.enabled = false;
+            isImgOn = false;
+            _isShielded = false;
             return;
         }
 
@@ -50,6 +50,7 @@ public class PlayerStats : MonoBehaviour
     public void Shield()
     {
         ShieldImage.enabled = true;
+        isImgOn = true;
         _isShielded = true;
     }
 
@@ -121,4 +122,9 @@ public class PlayerStats : MonoBehaviour
     private bool _isShielded;
     private const int NO_HEALTH = 0;
     private const float ANIMATION_DURATION = 1f;
+    public Image ShieldImage;
+    public AudioClip damage_sound;
+    private AudioSource audioSource;
+    private bool isImgOn;
+
 }
