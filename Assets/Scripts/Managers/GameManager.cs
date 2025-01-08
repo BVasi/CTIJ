@@ -60,5 +60,6 @@ public enum GameState
     ShopMenu,
     Lose,
     MainGamePlay,
+    SettingsMenu,
     Quit
 }
