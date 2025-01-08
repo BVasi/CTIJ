@@ -5,23 +5,12 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    public Image ShieldImage;
-    public AudioClip damage_sound; 
-    private AudioSource audioSource;
-
     void Start()
     {
         _health = 100;
         _damage = 10;
         _maxHealth = 100;
         _isShielded = false;
-        ShieldImage.enabled = false;
-
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
     }
 
     public void TakeDamage(int damage)
@@ -29,15 +18,8 @@ public class PlayerStats : MonoBehaviour
         if (_isShielded)
         {
             _isShielded = false;
-            ShieldImage.enabled = false;
             return;
         }
-
-        if (damage_sound != null)
-        {
-            audioSource.PlayOneShot(damage_sound);
-        }
-
         _health -= damage;
         if (_health < NO_HEALTH)
         {
@@ -49,7 +31,6 @@ public class PlayerStats : MonoBehaviour
 
     public void Shield()
     {
-        ShieldImage.enabled = true;
         _isShielded = true;
     }
 
