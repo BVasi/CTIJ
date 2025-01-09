@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
@@ -43,7 +44,7 @@ public class WaveManager : MonoBehaviour
             HandleWaveFailure();
             GameManager.Instance.UpdateGameState(GameState.Lose);
         }
-        Debug.Log($"Time remaining = {_timer.GetTimeRemainingInSeconds()} seconds"); //to do: show inside UI
+        _waveTimerText.text = $"{_timer.GetTimeRemainingInSeconds():F0} s";
     }
 
     public void ResetWaves()
@@ -61,6 +62,7 @@ public class WaveManager : MonoBehaviour
         _isSpawningComplete = false;
         _waveCoroutine = StartCoroutine(SpawnEnemiesOverTime());
         _timer.StartTimerForSeconds(Random.Range(MIN_WAVE_TIME, MAX_WAVE_TIME));
+        _waveTimerText = GameObject.FindWithTag(WAVE_TIMER_UI_TAG).GetComponent<TextMeshProUGUI>();
         _isWaveActive = true;
     }
 
@@ -163,6 +165,7 @@ public class WaveManager : MonoBehaviour
     private bool _isSpawningComplete;
     private List<GameObject> _enemies;
     private Timer _timer;
+    private TextMeshProUGUI _waveTimerText;
     private Coroutine _waveCoroutine;
 
     private Vector3[] ENEMY_POSSIBLE_SPAWNS = {
@@ -183,4 +186,6 @@ public class WaveManager : MonoBehaviour
     private const int MAX_INCREASED_DAMAGE = 10;
     private const int MIN_INCREASED_HEALTH = 10;
     private const int MAX_INCREASED_HEALTH = 30;
+
+    private const string WAVE_TIMER_UI_TAG = "WaveTimer";
 }

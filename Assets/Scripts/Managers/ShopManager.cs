@@ -129,17 +129,17 @@ public class ShopManager : MonoBehaviour
     private const string HEALTH_IMAGE_NAME = "health";
     private const string HEALTH_TITLE = "Health";
     private const string HEALTH_DESCRIPTION = "Adds extra health";
-    private const int HEALTH_PRICE = 0;
+    private const int HEALTH_PRICE = 15;
     private const int HEALTH_IMPROVEMENT_AMOUNT = 15;
     private const string SPEED_IMAGINE_NAME = "speed";
     private const string SPEED_TITLE = "Speed";
     private const string SPEED_DESCRIPTION = "Grants you extra speed";
-    private const int SPEED_PRICE = 0;
+    private const int SPEED_PRICE = 10;
     private const int SPEED_IMPROVEMENT_AMOUNT = 2;
     private const string DAMAGE_IMAGE_NAME = "damage";
     private const string DAMAGE_TITLE = "Damage";
     private const string DAMAGE_DESCRIPTION = "Grants you extra damage";
-    private const int DAMAGE_PRICE = 0;
+    private const int DAMAGE_PRICE = 15;
     private const int DAMAGE_IMPROVEMENT_AMOUNT = 10;
 
     private const string STAT_OBJECT_IMAGE = "Image";
