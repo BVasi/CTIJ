@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Item
   - WaveTimer
+  - CoinsCounter
   layers:
   - Default
   - TransparentFX

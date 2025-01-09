@@ -115,7 +115,7 @@ public class PlayerStats : MonoBehaviour
 
     [SerializeField] private Image _healthBar; //to do: put this in UIManager and update it there, possible bug here (move image through scenes even though its not there)
     private AudioSource _audioSource; //to do: refactor
-    public Image _shieldImage;
+    [SerializeField] public Image _shieldImage;
     private int _health;
     private int _maxHealth;
     private int _damage;
