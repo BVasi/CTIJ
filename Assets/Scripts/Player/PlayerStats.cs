@@ -12,6 +12,10 @@ public class PlayerStats : MonoBehaviour
         _maxHealth = 100;
         _isShielded = false;
         _audioSource = GetComponent<AudioSource>();
+        if (_shieldImage != null)
+        {
+            _shieldImage.enabled = false;
+        }
     }
 
     public void TakeDamage(int damage)
@@ -19,6 +23,12 @@ public class PlayerStats : MonoBehaviour
         if (_isShielded)
         {
             _isShielded = false;
+
+            if (_shieldImage != null)
+            {
+                _shieldImage.enabled = false;
+            }
+
             return;
         }
         _health -= damage;
@@ -34,6 +44,12 @@ public class PlayerStats : MonoBehaviour
     public void Shield()
     {
         _isShielded = true;
+
+        if (_shieldImage != null)
+        {
+            _shieldImage.enabled = true;
+        }
+
     }
 
     public void Heal(int amount)
@@ -99,6 +115,7 @@ public class PlayerStats : MonoBehaviour
 
     [SerializeField] private Image _healthBar; //to do: put this in UIManager and update it there, possible bug here (move image through scenes even though its not there)
     private AudioSource _audioSource; //to do: refactor
+    [SerializeField] public Image _shieldImage;
     private int _health;
     private int _maxHealth;
     private int _damage;
