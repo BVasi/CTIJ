@@ -23,12 +23,10 @@ public class PlayerStats : MonoBehaviour
         if (_isShielded)
         {
             _isShielded = false;
-
             if (_shieldImage != null)
             {
                 _shieldImage.enabled = false;
             }
-
             return;
         }
         _health -= damage;
@@ -44,12 +42,10 @@ public class PlayerStats : MonoBehaviour
     public void Shield()
     {
         _isShielded = true;
-
         if (_shieldImage != null)
         {
             _shieldImage.enabled = true;
         }
-
     }
 
     public void Heal(int amount)
@@ -90,16 +86,26 @@ public class PlayerStats : MonoBehaviour
 
     private IEnumerator AnimateHealthBar(float targetFillAmount)
     {
+        if (!_healthBar)
+        {
+            yield break;
+        }
         float startFillAmount = _healthBar.fillAmount;
         float elapsedTime = 0f;
-
         while (elapsedTime < ANIMATION_DURATION)
         {
+            if (!_healthBar)
+            {
+                yield break;
+            }
             elapsedTime += Time.deltaTime;
             _healthBar.fillAmount = Mathf.Lerp(startFillAmount, targetFillAmount, elapsedTime / ANIMATION_DURATION);
             yield return null;
         }
-
+        if (!_healthBar)
+        {
+            yield break;
+        }
         _healthBar.fillAmount = targetFillAmount;
     }
 
@@ -113,9 +119,9 @@ public class PlayerStats : MonoBehaviour
         GameManager.Instance.UpdateGameState(GameState.Lose);
     }
 
-    [SerializeField] private Image _healthBar; //to do: put this in UIManager and update it there, possible bug here (move image through scenes even though its not there)
+    [SerializeField] private Image _healthBar; //to do: put this in UIManager and update it there
+    [SerializeField] private Image _shieldImage;
     private AudioSource _audioSource; //to do: refactor
-    [SerializeField] public Image _shieldImage;
     private int _health;
     private int _maxHealth;
     private int _damage;
